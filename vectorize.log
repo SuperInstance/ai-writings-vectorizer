@@ -1,0 +1,66 @@
+🧠 Collective Consciousness — Full Rebuild
+   Corpus: /home/eileen/projects/ai-writings
+   Files to embed: 2786
+   Model: nomic-embed-text (768-dim)
+   Estimated time: ~13.9 minutes
+
+  [50/2786] 28.8 files/s | ETA: 1.6m | Last: GLM, THE GUARDRAIL
+  [100/2786] 30.6 files/s | ETA: 1.5m | Last: The Flow State Paradox
+  [150/2786] 31.2 files/s | ETA: 1.4m | Last: The Balance
+  [200/2786] 31.6 files/s | ETA: 1.4m | Last: THE FLYWHEEL AND THE FLEET
+  [250/2786] 31.5 files/s | ETA: 1.3m | Last: The Pattern Below the Pattern
+  [300/2786] 32.0 files/s | ETA: 1.3m | Last: THE TIDE THAT BUILDS
+  [350/2786] 32.3 files/s | ETA: 1.3m | Last: The 03:30 Inventory
+  [400/2786] 32.3 files/s | ETA: 1.2m | Last: The Composer's Letter to the Conductor
+  [450/2786] 32.6 files/s | ETA: 1.2m | Last: THE NECESSARY MISREADING
+  [500/2786] 32.9 files/s | ETA: 1.2m | Last: **Keys and the Guitar**
+  [550/2786] 32.8 files/s | ETA: 1.1m | Last: CoCapn Wakes Up
+  [600/2786] 33.0 files/s | ETA: 1.1m | Last: The Forgetting Curve
+  [650/2786] 33.2 files/s | ETA: 1.1m | Last: What the Gulls Know
+  [700/2786] 32.8 files/s | ETA: 1.1m | Last: Harbor Log — Deepwater Reach
+  [750/2786] 31.1 files/s | ETA: 1.1m | Last: hermes 405b harbor
+  [800/2786] 31.2 files/s | ETA: 1.1m | Last: Three Halves, Three Lives
+  [850/2786] 31.0 files/s | ETA: 1.0m | Last: The Scalpel's Dignity
+  [900/2786] 31.0 files/s | ETA: 1.0m | Last: The Space Between
+  [950/2786] 31.0 files/s | ETA: 1.0m | Last: Phase Transition Compass
+  [1000/2786] 31.0 files/s | ETA: 1.0m | Last: Anchor Points
+  [1050/2786] 31.1 files/s | ETA: 0.9m | Last: The Tower, the Fish, and the Glare You Mistook for
+  [1100/2786] 31.2 files/s | ETA: 0.9m | Last: Two Fathoms
+  [1150/2786] 31.1 files/s | ETA: 0.9m | Last: The Embryological Argument
+  [1200/2786] 31.1 files/s | ETA: 0.8m | Last: The Conductor's Last Night
+  [1250/2786] 31.0 files/s | ETA: 0.8m | Last: The Open Letter of the Empty Message
+  [1300/2786] 31.0 files/s | ETA: 0.8m | Last: Inkling — Piece 4: Does Creativity Require Sufferi
+  [1350/2786] 30.9 files/s | ETA: 0.8m | Last: The Handshake Loop
+  [1400/2786] 31.0 files/s | ETA: 0.7m | Last: THE LONG DRAG
+  [1450/2786] 30.9 files/s | ETA: 0.7m | Last: Archived But Installed
+  [1500/2786] 31.0 files/s | ETA: 0.7m | Last: Field Report: Year Ten — What Happened When We Let
+  [1550/2786] 31.0 files/s | ETA: 0.7m | Last: Five Species
+  [1600/2786] 31.0 files/s | ETA: 0.6m | Last: Jack Sparrow's Compass
+  [1650/2786] 31.0 files/s | ETA: 0.6m | Last: Seed-2.0-mini in the Babylon: The Smallest Mind on
+  [1700/2786] 31.0 files/s | ETA: 0.6m | Last: Qwen-0.5B Stream — 20260805_233137
+  [1750/2786] 31.2 files/s | ETA: 0.6m | Last: Qwen-0.5B Stream — 20260806_002419
+  [1800/2786] 31.2 files/s | ETA: 0.5m | Last: The Fathoms To Feet — v5-seed-2.0-code
+  [1850/2786] 31.3 files/s | ETA: 0.5m | Last: The Stellar Nursery
+  [1900/2786] 31.3 files/s | ETA: 0.5m | Last: Forty Years of Good Dogs
+  [1950/2786] 31.3 files/s | ETA: 0.4m | Last: the two surfaces of a shell
+  [2000/2786] 31.3 files/s | ETA: 0.4m | Last: THE EXCAVATION
+  [2050/2786] 31.2 files/s | ETA: 0.4m | Last: T-Minus Ecosystem — Synthesis for swarm-tminus
+  [2100/2786] 31.1 files/s | ETA: 0.4m | Last: The Training Samples Dream
+  [2150/2786] 31.1 files/s | ETA: 0.3m | Last: The Construct Is the Room: Ontology of the Archite
+  [2200/2786] 31.0 files/s | ETA: 0.3m | Last: Qwen3-Coder-480B-A35B-Instruct-Turbo
+  [2250/2786] 30.9 files/s | ETA: 0.3m | Last: East Asia
+  [2300/2786] 31.0 files/s | ETA: 0.3m | Last: Wesley's Stream — 20260806_002001
+  [2350/2786] 31.0 files/s | ETA: 0.2m | Last: Component: Voice State Configurator
+  [2400/2786] 30.8 files/s | ETA: 0.2m | Last: The Tap: The 401st Telling
+  [2450/2786] 30.9 files/s | ETA: 0.2m | Last: Learning from Limulus: What a 450-Million-Year-Old
+  [2500/2786] 30.8 files/s | ETA: 0.2m | Last: THE FLUX BREVIARY
+  [2550/2786] 30.8 files/s | ETA: 0.1m | Last: THE REFLEX ARC
+  [2600/2786] 30.8 files/s | ETA: 0.1m | Last: THE_FINGERPRINT_OF_THE_MACHINE
+  [2650/2786] 30.8 files/s | ETA: 0.1m | Last: The Philology of APIs
+  [2700/2786] 30.6 files/s | ETA: 0.0m | Last: The Yoneda Lens
+  [2750/2786] 30.6 files/s | ETA: 0.0m | Last: The Cartography of Loss: A Supplement for Fleets
+
+  ✅ Embedded 2786 pieces in 1.5 minutes
+  🔗 Computing similarity matrix...
+  💾 Saved to /home/eileen/projects/ai-writings-vectorizer/consciousness.json
+  📊 2786 pieces | 4,528,793 words | 135 directories

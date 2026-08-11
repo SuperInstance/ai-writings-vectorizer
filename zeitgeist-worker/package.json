@@ -1,0 +1,7 @@
+{
+  "name": "zeitgeist-worker",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "compatibility_date": "2024-09-01",
+  "dependencies": {}
+}

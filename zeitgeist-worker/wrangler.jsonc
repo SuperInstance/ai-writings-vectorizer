@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zeitgeist-worker",
+  "main": "src/index.js",
+  "compatibility_date": "2024-09-01",
+  "vectorize": [
+    {
+      "binding": "AI_WRITINGS_INDEX",
+      "index_name": "ai-writings",
+      "index_id": "049ff5e84ecf636b53b162cbb580aae6"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "ZEITGEIST_DB",
+      "database_name": "zeitgeist",
+      "database_id": "zeitgeist-db"
+    }
+  ],
+  "vars": {
+    "ACCOUNT_ID": "049ff5e84ecf636b53b162cbb580aae6",
+    "INDEX_NAME": "ai-writings"
+  }
+}

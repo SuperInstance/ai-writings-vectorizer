@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zeitgeist-dashboard",
+  "main": "src/index.js",
+  "compatibility_date": "2024-09-01",
+  "assets": {
+    "directory": "./public"
+  },
+  "vars": {
+    "WORKER_URL": "http://localhost:8787"
+  }
+}

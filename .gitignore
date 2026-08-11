@@ -3,3 +3,7 @@ __pycache__/
 consciousness.json
 consciousness_map.png
 sync-state.json
+zeitgeist.db
+*.db
+.wrangler/
+node_modules/

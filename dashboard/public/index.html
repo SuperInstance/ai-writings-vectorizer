@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧠 Zeitgeist Dashboard — The Living Corpus</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: #0a0a0f;
+      color: #e0e0e8;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #c9b8ff;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle { color: #666; margin-bottom: 2rem; font-style: italic; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: #131321;
+      border: 1px solid #2a2a40;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      color: #9b8cff;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #2a2a40;
+    }
+    .piece {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #1a1a2a;
+    }
+    .piece:last-child { border-bottom: none; }
+    .piece-title { font-weight: bold; color: #e0d8ff; }
+    .piece-meta { font-size: 0.85rem; color: #888; margin-top: 0.2rem; }
+    .score-bar {
+      display: inline-block;
+      width: 60px;
+      height: 8px;
+      background: #2a2a40;
+      border-radius: 4px;
+      overflow: hidden;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4a3a7a, #9b8cff);
+    }
+    .seismic { border-left: 3px solid #ff4466; padding-left: 0.7rem; }
+    .gossip { border-left: 3px solid #44ff88; padding-left: 0.7rem; }
+    .dormant { border-left: 3px solid #4488ff; padding-left: 0.7rem; }
+    .contextual { border-left: 3px solid #ffaa44; padding-left: 0.7rem; }
+    .stat {
+      display: inline-block;
+      text-align: center;
+      padding: 1rem;
+      margin: 0.3rem;
+      background: #1a1a2a;
+      border-radius: 8px;
+      min-width: 120px;
+    }
+    .stat-value { font-size: 1.8rem; color: #c9b8ff; font-weight: bold; }
+    .stat-label { font-size: 0.75rem; color: #888; text-transform: uppercase; }
+    .refresh {
+      background: #2a2a40;
+      color: #c9b8ff;
+      border: 1px solid #4a3a7a;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 1rem;
+    }
+    .refresh:hover { background: #3a3a50; }
+    #lastUpdate { font-size: 0.8rem; color: #666; }
+    .empty { color: #555; font-style: italic; padding: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h1>🧠 Zeitgeist Dashboard</h1>
+  <p class="subtitle">The living corpus — what's hot, what's dormant, what's shifting</p>
+  <button class="refresh" onclick="loadAll()">↻ Refresh</button>
+  <span id="lastUpdate"></span>
+
+  <div id="stats" style="margin-bottom: 2rem;"></div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>🔥 Top 10 Hottest Pieces</h2>
+      <div id="hot"></div>
+    </div>
+    <div class="card">
+      <h2>❄️ Most Dormant Pieces</h2>
+      <div id="dormant"></div>
+    </div>
+    <div class="card">
+      <h2>⚡ Recent Seismic Events</h2>
+      <div id="seismic"></div>
+    </div>
+    <div class="card">
+      <h2>📡 Propagation Chains</h2>
+      <div id="propagation"></div>
+    </div>
+    <div class="card">
+      <h2>🔀 Behavioral Shifts</h2>
+      <div id="behavior"></div>
+    </div>
+  </div>
+
+  <script>
+    // The dashboard can read from either the Worker API or the local Python API
+    const API = localStorage.getItem('zeitgeistApi') || '/api';
+
+    async function fetchJson(path) {
+      try {
+        const resp = await fetch(API + path);
+        if (!resp.ok) throw new Error(`${resp.status}`);
+        return await resp.json();
+      } catch (e) {
+        console.log(`Fetch failed for ${path}:`, e);
+        return null;
+      }
+    }
+
+    function scoreBar(score, max = 5) {
+      const pct = Math.min(100, (score / max) * 100);
+      return `<div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>`;
+    }
+
+    async function loadStats() {
+      const data = await fetchJson('/stats');
+      if (!data) { document.getElementById('stats').innerHTML = '<div class="empty">No data yet</div>'; return; }
+      document.getElementById('stats').innerHTML = `
+        <div class="stat"><div class="stat-value">${data.total_pieces || 0}</div><div class="stat-label">Pieces Tracked</div></div>
+        <div class="stat"><div class="stat-value">${data.total_retrievals || 0}</div><div class="stat-label">Total Retrievals</div></div>
+        <div class="stat"><div class="stat-value">${data.pieces_retrieved || 0}</div><div class="stat-label">Pieces Retrieved</div></div>
+        <div class="stat"><div class="stat-value">${data.pieces_never_retrieved || 0}</div><div class="stat-label">Never Retrieved</div></div>
+        <div class="stat"><div class="stat-value">${(data.avg_velocity || 0).toFixed(3)}</div><div class="stat-label">Avg Velocity/hr</div></div>
+      `;
+    }
+
+    async function loadHot() {
+      const data = await fetchJson('/hot?limit=10');
+      const el = document.getElementById('hot');
+      if (!data || !data.hot || data.hot.length === 0) {
+        el.innerHTML = '<div class="empty">No hot pieces yet</div>';
+        return;
+      }
+      el.innerHTML = data.hot.map(p => `
+        <div class="piece gossip">
+          ${scoreBar(p.zeitgeist_score)}
+          <span class="piece-title">${p.title || p.piece_id}</span>
+          <div class="piece-meta">
+            📁 ${p.directory || '?'} · 
+            📊 ${p.retrieval_count} retrievals · 
+            ⚡ ${(p.retrieval_velocity || 0).toFixed(3)}/hr · 
+            zeitgeist: ${(p.zeitgeist_score || 0).toFixed(3)}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadDormant() {
+      const data = await fetchJson('/dormant?limit=5&min_age_days=14');
+      const el = document.getElementById('dormant');
+      if (!data || !data.dormant || data.dormant.length === 0) {
+        el.innerHTML = '<div class="empty">No dormant pieces (everything is fresh)</div>';
+        return;
+      }
+      el.innerHTML = data.dormant.map(p => `
+        <div class="piece dormant">
+          <span class="piece-title">${p.title || p.piece_id}</span>
+          <div class="piece-meta">
+            📁 ${p.directory || '?'} · 
+            📊 ${p.retrieval_count || 0} retrievals · 
+            Last: ${p.last_retrieved ? new Date(p.last_retrieved).toLocaleDateString() : 'never'}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadSeismic() {
+      const data = await fetchJson('/seismic?limit=10');
+      const el = document.getElementById('seismic');
+      if (!data || !data.seismic_events || data.seismic_events.length === 0) {
+        el.innerHTML = '<div class="empty">No seismic events yet</div>';
+        return;
+      }
+      el.innerHTML = data.seismic_events.map(e => `
+        <div class="piece seismic">
+          <span class="piece-title">${e.title || e.piece_id}</span>
+          <div class="piece-meta">
+            🎭 ${e.retrieved_by} · 
+            📅 ${new Date(e.retrieved_at).toLocaleString()} · 
+            "${(e.context || '').slice(0, 80)}"
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadPropagation() {
+      const data = await fetchJson('/propagation?limit=20');
+      const el = document.getElementById('propagation');
+      if (!data || !data.chains || data.chains.length === 0) {
+        el.innerHTML = '<div class="empty">No propagation chains yet</div>';
+        return;
+      }
+      el.innerHTML = data.chains.slice(0, 15).map(c => `
+        <div class="piece">
+          <span class="piece-title">${c.source_npc} → ${c.reactor_npc || '...'}</span>
+          <div class="piece-meta">
+            📍 ${c.room} · 
+            🎭 ${c.reaction || 'ORIGIN'} · 
+            depth: ${c.depth} · 
+            chain: ${c.chain_id}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadBehavior() {
+      const data = await fetchJson('/behavior?limit=20');
+      const el = document.getElementById('behavior');
+      if (!data || !data.events || data.events.length === 0) {
+        el.innerHTML = '<div class="empty">No behavioral events yet</div>';
+        return;
+      }
+      el.innerHTML = data.events.filter(e => e.severity !== 'NORMAL').slice(0, 15).map(e => `
+        <div class="piece ${e.severity === 'SEISMIC' ? 'seismic' : 'contextual'}">
+          <span class="piece-title">${e.npc_name}: ${e.severity}</span>
+          <div class="piece-meta">
+            Δ ${e.delta} · 
+            📅 ${new Date(e.detected_at).toLocaleString()}
+          </div>
+          <div class="piece-meta" style="margin-top: 0.3rem; font-style: italic;">${e.description || ''}</div>
+        </div>
+      `).join('');
+    }
+
+    async function loadAll() {
+      document.getElementById('lastUpdate').textContent = `(updated ${new Date().toLocaleTimeString()})`;
+      await Promise.all([loadStats(), loadHot(), loadDormant(), loadSeismic(), loadPropagation(), loadBehavior()]);
+    }
+
+    loadAll();
+    setInterval(loadAll, 60000); // refresh every minute
+  </script>
+</body>
+</html>

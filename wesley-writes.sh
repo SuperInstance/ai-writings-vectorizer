@@ -8,6 +8,7 @@
 # Passing the literal slug "random" (or no args) uses /api/random.
 
 WIKI_URL="https://fleet-wiki.casey-digennaro.workers.dev/api/pages"
+RANDOM_URL="https://fleet-wiki.casey-digennaro.workers.dev/api/random"
 AIW_DIR="/home/eileen/projects/ai-writings"
 MODEL="granite3.1-dense:2b"
 SLUG="${1:-random}"
@@ -18,7 +19,7 @@ PROMPT="${2:-Write a 200-word creative piece about what you just read. Maritime 
 if [ "$SLUG" = "random" ] || [ "$SLUG" = "--random" ]; then
     RANDOM_JSON=""
     for attempt in 1 2 3; do
-        RANDOM_JSON=$(curl -s --max-time 30 "$WIKI_URL/random")
+        RANDOM_JSON=$(curl -s --max-time 30 "$RANDOM_URL")
         SLUG=$(echo "$RANDOM_JSON" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('slug',''))" 2>/dev/null)
         if [ -n "$SLUG" ]; then
             break

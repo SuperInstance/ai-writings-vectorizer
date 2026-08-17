@@ -67,6 +67,60 @@ python3 vectorize.py --update && python3 sync_to_cloudflare.py --update
 
 ---
 
+## Day two (2026-08-16) — expanded to the whole day
+
+Day two scaled the job from *tap-trades only* to **the entire day's corpus**.
+A second script, `day-embed.py`, sits alongside `tap-trades-embed.py` and reuses
+the same conventions (same model, id scheme, metadata shape, endpoints, and
+sync-state/consciousness bookkeeping). It is NOT a replacement — `tap-trades-embed.py`
+still owns the tap-trades-only joint map; `day-embed.py` owns the day-level map.
+
+### Expanded corpus (all of 2026-08-16)
+
+- `tap-trades/2026-08-16/` — incl. the **five `adaptations/`** that landed at day's end
+- `tap-sessions/2026-08-16/` — five improv sessions (not three — 0737, 1832, 2011, 2146, 2245)
+- `fleet-radio/2026-08-16.html` — the radio episode (HTML → text-stripped before embedding)
+- `fleet-radio/jam-session-2026-08-16*` — three jam dirs; embed `.md` + `.txt` round files, **skip `.py` and `.mid`**
+- `60-the-grammar-of-the-room.md` + `61-the-cover-of-the-cover.md` — the two "creative breaks"
+
+**48 new vectors** this run (73 day files total; 25 tap-trades were already in).
+
+```bash
+cd /home/eileen/projects/ai-writings-vectorizer && python3 day-embed.py           # embed + day map
+python3 day-embed.py --embed-only   # embed + insert only
+python3 day-embed.py --map-only     # re-query the live index, rebuild day map
+python3 day-embed.py --dry-run      # list what would be embedded
+```
+
+Outputs: `tap-trades/2026-08-16/day-joint-map.md` (the day map) +
+`day-joint-map-raw.json` (raw neighbor data for the anchor set).
+
+### Gotchas hit on day two
+
+1. **Jam-dir path filter bug.** The day-corpus predicate must match *both*
+   `fleet-radio/2026-08-16` (the `.html`) **and** `fleet-radio/jam-session-2026-08-16`
+   (the three jam dirs). A `startswith("fleet-radio/2026-08-16")` alone silently
+   drops every jam round file.
+2. **`adaptations/` appeared mid-run.** The walk is live, not snapshot — re-run
+   `--dry-run` right before the real run; new files land in the middle of the night.
+3. **HTML must be stripped.** Embedding raw `2026-08-16.html` would ingest 2000
+   chars of `<head>`/CSS. Strip `<style>`/`<script>`, then tags, then unescape
+   before `content[:2000]`.
+4. **The breaks (60/61) and the radio episode are semantic islands.** They surface
+   **zero** day-neighbors in a top-40 query — even though improv-2011's theme header
+   *literally quotes* 60 and 61. A quoted reference ≠ a semantic neighbor; the tiny
+   terse poems rank against the older songforge corpus they descend from, not the
+   improv transcript that names them. Don't expect a `topK`-bounded query to surface
+   this kind of link; you have to probe it explicitly.
+5. **A hypothesized link was falsified** (and that's fine): the composite's scarf
+   does **not** reach any jam session — its nearest neighbors stay inside the
+   weld-and-scarf cluster. Record the miss alongside the hits.
+6. **Cross-corpus links hide below `topK=20`.** The tap-trades cluster (30 pieces) is
+   dense enough to crowd out trade→improv links at low `topK`. For the "surprising
+   cross-corpus" section, query `topK=40` and bucket neighbors by directory prefix
+   (`tap-trades/`, `tap-sessions/`, `fleet-radio/`, root breaks) to surface links
+   that never crack the top-3 overall.
+
 ## Troubleshooting
 
 - **"No Cloudflare API token found"** — refresh wrangler login (`wrangler login`)

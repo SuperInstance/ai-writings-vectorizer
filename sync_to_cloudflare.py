@@ -32,7 +32,7 @@ INDEX_NAME = "ai-writings"
 # Vectorize API endpoints
 BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/vectorize/v2/indexes/{INDEX_NAME}"
 INSERT_URL = f"{BASE_URL}/insert"
-DELETE_URL = f"{BASE_URL}/delete-by-ids"
+DELETE_URL = f"{BASE_URL}/delete_by_ids"
 INFO_URL = BASE_URL
 
 BATCH_SIZE = 100  # max vectors per request
@@ -139,6 +139,47 @@ def api_post(url: str, token: str, data: list, retries: int = 3):
                 continue
             return False, [{"error": str(e)}]
 
+    return False, [{"error": "Max retries exceeded"}]
+
+
+def api_delete(url: str, token: str, ids: list, retries: int = 3):
+    """POST delete_by_ids to Cloudflare Vectorize (body is {ids: [...]})."""
+    payload = json.dumps({"ids": ids}).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                result = json.loads(resp.read().decode("utf-8"))
+                if not result.get("success"):
+                    print(f"  ⚠️  API returned errors: {result.get('errors', [])}")
+                    return False, result.get("errors", [])
+                return True, result
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", errors="replace")
+            if e.code == 429:
+                wait = min(2 ** attempt * 5, 60)
+                print(f"  ⏳ Rate limited, waiting {wait}s...")
+                time.sleep(wait)
+                continue
+            print(f"  ❌ HTTP {e.code}: {body[:200]}")
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            return False, [{"error": f"HTTP {e.code}", "body": body[:500]}]
+        except Exception as e:
+            print(f"  ❌ Request failed: {e}")
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            return False, [{"error": str(e)}]
     return False, [{"error": "Max retries exceeded"}]
 
 
@@ -306,8 +347,7 @@ def sync_update(token: str, verbose: bool = True):
     # Delete in batches
     for batch_start in range(0, len(to_delete), BATCH_SIZE):
         batch_ids = to_delete[batch_start : batch_start + BATCH_SIZE]
-        payload = [{"id": vid} for vid in batch_ids]
-        success, result = api_post(DELETE_URL, token, payload)
+        success, result = api_delete(DELETE_URL, token, batch_ids)
         if success:
             total_deleted += len(batch_ids)
 
